@@ -1,0 +1,29 @@
+﻿<Window x:Class="Evaluation.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Evaluation"
+        mc:Ignorable="d"
+        xmlns:s="http://schemas.abtsoftware.co.uk/scichart"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="8*"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <s:SciChartSurface Grid.Row="0" x:Name="Surface"
+                           s:ThemeManager.Theme="BrightSpark"
+                           Background="Transparent"
+                           s:VisualXcceleratorEngine.IsEnabled="True"
+                           s:VisualXcceleratorEngine.FallbackType="{x:Type s:HighQualityRenderSurface}"
+                           s:VisualXcceleratorEngine.DowngradeWithoutException="False"
+                           s:VisualXcceleratorEngine.EnableImpossibleMode="True"
+                           RenderableSeries="{s:SeriesBinding RenderableSeries}" 
+                           YAxes="{s:AxesBinding YAxes}"
+                           XAxes="{s:AxesBinding XAxes}">
+            
+        </s:SciChartSurface>
+        <Button Grid.Row="1" Width="80" Content="Print" Click="Print"/>
+    </Grid>
+</Window>

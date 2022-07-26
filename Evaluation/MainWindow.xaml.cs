@@ -1,0 +1,97 @@
+﻿using SciChart.Charting.Model.ChartSeries;
+using SciChart.Charting.Model.DataSeries;
+using SciChart.Core;
+using SciChart.Data.Model;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+namespace Evaluation
+{
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        public MainWindow()
+        {
+            InitializeComponent();
+            DataContext = new MainWindowViewModel();
+        }
+
+        private void Print(object sender, RoutedEventArgs e)
+        {
+            var chartFile = $"{AppDomain.CurrentDomain.BaseDirectory}chart.jpg";
+            bool useXamlRenderSurface = false;
+            Size exportedSize = new Size(600, 400);
+            Surface.ExportToFile(chartFile, ExportType.Jpeg, useXamlRenderSurface, exportedSize);
+            Process.Start(chartFile);
+        }
+    }
+    public class MainWindowViewModel : BindableObject
+    {
+        DateTime now = DateTime.Now;
+        private ObservableCollection<IAxisViewModel> _yAxes = new ObservableCollection<IAxisViewModel>();
+        private ObservableCollection<IAxisViewModel> _xAxes = new ObservableCollection<IAxisViewModel>();
+        private ObservableCollection<IRenderableSeriesViewModel> _renderableSeries = new ObservableCollection<IRenderableSeriesViewModel>();
+
+        public ObservableCollection<IAxisViewModel> YAxes { get { return _yAxes; } }
+        public ObservableCollection<IAxisViewModel> XAxes { get { return _xAxes; } }
+        public ObservableCollection<IRenderableSeriesViewModel> RenderableSeries { get { return _renderableSeries; } }
+
+        public MainWindowViewModel()
+        {
+            YAxes.Add(new NumericAxisViewModel()
+            {
+                VisibleRange = new DoubleRange(0, 9999),
+                VisibleRangeLimit = new DoubleRange(0, 9999),
+                Id = "DEFAULT_Y_AXIS",
+            });
+            XAxes.Add(new DateTimeAxisViewModel()
+            {
+                VisibleRange = new DateRange(now.AddHours(-6), now),
+                VisibleRangeLimit = new DateRange(now.AddHours(-6), now),
+                Id = "DefaultXAxis",
+            });
+            RenderableSeries.Add(GenerateRenderableSeries());
+        }
+
+        private IRenderableSeriesViewModel GenerateRenderableSeries()
+        {
+            return new LineRenderableSeriesViewModel()
+            {
+                YAxisId = "DEFAULT_Y_AXIS",
+                XAxisId = "DefaultXAxis",
+                StrokeThickness = 3,
+                Stroke = Colors.Red,
+                DataSeries = CreateDataSeries()
+            };
+        }
+
+        private IDataSeries CreateDataSeries()
+        {
+            var lineData = new XyDataSeries<DateTime, double>();
+            Random random = new Random();   
+            var start = now.AddHours(-6);
+            while(start < now)
+            {
+                lineData.Append(start, random.Next(0, 9999));
+                start = start.AddMinutes(1);
+            }
+            return lineData;
+        }
+    }
+}
