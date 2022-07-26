@@ -24,6 +24,12 @@
                            XAxes="{s:AxesBinding XAxes}">
             
         </s:SciChartSurface>
-        <Button Grid.Row="1" Width="80" Content="Print" Click="Print"/>
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Button Grid.Row="1" Width="80" Content="Print Ex1" Click="Print"/>
+            <Button Grid.Row="1" Width="80" Content="Print Ex2" Click="Print2"/>
+            <Button Grid.Row="1" Width="80" Content="Print Ex3" Click="Print3"/>
+            <Button Grid.Row="1" Width="80" Content="Print UIEl" Click="PrintUIEl"/>
+        </StackPanel>
+        
     </Grid>
 </Window>
